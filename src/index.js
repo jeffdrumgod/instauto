@@ -183,7 +183,11 @@ const Instauto = async (db, browser, options) => {
   }
 
   // See https://github.com/mifi/SimpleInstaBot/issues/140#issuecomment-1149105387
-  const gotoUrl = async (url) => page.goto(url, { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] });
+  const gotoUrl = async (url) => {
+    const newUrl = new URL(url); // validate url
+    newUrl.searchParams.set('hl', 'en'); // force language parameter for all pages
+    return page.goto(newUrl.toString(), { waitUntil: ['load', 'domcontentloaded', 'networkidle0'] });
+  }
 
   async function gotoWithRetry(url) {
     const maxAttempts = 3;
